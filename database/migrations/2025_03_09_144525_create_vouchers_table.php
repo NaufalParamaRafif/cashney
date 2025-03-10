@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('code');
             $table->unsignedInteger('max_used');
             $table->float('discount_percentage', 4, 2);
+            $table->date('expired_date');
             $table->timestamps();
         });
     }

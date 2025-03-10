@@ -10,6 +10,8 @@ class TransactionDetail extends Model
 {
     use HasFactory;
 
+    protected $table = 'transactions_detail';
+
     public function transaction(): BelongsTo
     {
         return $this->belongsTo(Transaction::class);
