@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();
             $table->decimal('price_total', $precision = 10, $scale = 2);
             $table->unsignedBigInteger('customer_id')->nullable(); 
             $table->unsignedBigInteger('cashier_id')->nullable(); 

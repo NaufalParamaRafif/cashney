@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image');
-            $table->decimal('price', $precision = 9, $scale = 2);
             $table->unsignedInteger('supply');
+            $table->decimal('price', $precision = 9, $scale = 2);
+            $table->unsignedBigInteger('discount_id')->nullable();
             $table->timestamps();
+            
+            $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('set null');
         });
     }
 

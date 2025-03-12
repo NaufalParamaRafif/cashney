@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Voucher extends Model
+class Discount extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
 
     public function transactions(): BelongsToMany
     {

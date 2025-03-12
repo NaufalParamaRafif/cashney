@@ -14,10 +14,6 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('voucher_id')->nullable();
-            
-            $table->timestamps();
-            $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('set null');
         });
     }
 

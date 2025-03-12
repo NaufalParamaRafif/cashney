@@ -29,9 +29,6 @@ class CategoryResource extends Resource
                 TextInput::make('name')
                     ->minLength(3)
                     ->maxLength(80),
-                Select::make('voucher_id')
-                    ->relationship(name: 'voucher', titleAttribute: 'code')
-                    ->searchable(['code'])->preload(),
             ]);
     }
 
@@ -39,16 +36,14 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Nama')->searchable(),
-                TextColumn::make('voucher.code')->label('Voucher')->searchable(),
-                TextColumn::make('created_at')->label('Dibuat Pada'),
-                TextColumn::make('updated_at')->label('Diubah Pada')
+                TextColumn::make('name')->label('Nama Kategori')->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

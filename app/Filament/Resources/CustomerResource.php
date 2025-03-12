@@ -44,6 +44,8 @@ class CustomerResource extends Resource
             ->columns([
                 TextColumn::make('name')->label('Nama')->searchable(),
                 TextColumn::make('address')->label('Alamat')->searchable(),
+                TextColumn::make('point')->label('Poin')->searchable(),
+                TextColumn::make('birth_date')->label('Tanggal Lahir')->searchable(),
                 TextColumn::make('email')->label('Email')->searchable(),
                 TextColumn::make('phone_number')->label('Nomor Telephone')->searchable(),
                 TextColumn::make('created_at')->label('Dibuat Pada'),

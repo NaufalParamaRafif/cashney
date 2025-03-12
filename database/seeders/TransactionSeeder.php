@@ -14,6 +14,7 @@ class TransactionSeeder extends Seeder
     public function run(): void
     {
         Transaction::create([
+            'code' => 'TRANSAKTI',
             'price_total' => 519.98,
             'customer_id' => 1,
             'cashier_id' => 2,

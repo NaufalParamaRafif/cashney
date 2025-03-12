@@ -18,22 +18,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             CustomerSeeder::class,
-            CategorySeeder::class,
+            DiscountSeeder::class,
             ProductSeeder::class,
-            VoucherSeeder::class,
+            CategorySeeder::class,
             TransactionSeeder::class,
             TransactionDetailSeeder::class,
         ]);
 
         Product::find(1)->categories()->attach(Category::find(1)->id);
         Product::find(2)->categories()->attach(Category::find(2)->id);
-
-        DB::table('voucher_transaction')->insert([
-            'voucher_code' => 'DISCOUNT10',
-            'voucher_id' => 1,
-            'transaction_id' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
     }
 }

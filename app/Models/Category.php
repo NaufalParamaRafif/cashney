@@ -11,13 +11,10 @@ class Category extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
-    }
-
-    public function voucher(): BelongsTo
-    {
-        return $this->belongsTo(Voucher::class);
     }
 }

@@ -14,13 +14,18 @@ return new class extends Migration
         Schema::create('transactions_detail', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('product_total');
+            $table->decimal('price_per_item', $precision = 9, $scale = 2);
             $table->decimal('subtotal', $precision = 10, $scale = 2);
+            $table->string('transaction_code');
             $table->string('product_name');
-            $table->unsignedBigInteger('product_id')->nullable();
+            $table->string('discount_code');
             $table->unsignedBigInteger('transaction_id');
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->unsignedBigInteger('discount_id')->nullable();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('set null');
             $table->timestamps();
         });
     }

@@ -11,9 +11,9 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    public function vouchers(): BelongsToMany
+    public function discounts(): BelongsToMany
     {
-        return $this->belongsToMany(Voucher::class);
+        return $this->belongsToMany(Discount::class);
     }
 
     public function transactions_detail(): HasMany
