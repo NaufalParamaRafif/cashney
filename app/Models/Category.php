@@ -17,4 +17,9 @@ class Category extends Model
     {
         return $this->belongsToMany(Product::class);
     }
+
+    public function totals()
+    {
+        return Product::where('id', '=', $this->id)->count();
+    }
 }

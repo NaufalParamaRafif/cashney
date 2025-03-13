@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 
 class DiscountResource extends Resource
 {
@@ -26,6 +29,8 @@ class DiscountResource extends Resource
     {
         return $form
             ->schema([
+                TextInput::make('name')
+                    ->minLength(5),
                 TextInput::make('code')
                     ->minLength(4)
                     ->maxLength(25),
@@ -33,13 +38,66 @@ class DiscountResource extends Resource
                     ->numeric()
                     ->inputMode('numeric')
                     ->minValue(1)
-                    ->maxValue(10000),
-                TextInput::make('discount_percentage')
+                    ->maxValue(1000000),
+                TextInput::make('minimum_point')
                     ->numeric()
-                    ->inputMode('decimal')
-                    ->minValue(0)
-                    ->maxValue(100),
-                DatePicker::make('expired_date')
+                    ->inputMode('numeric'),
+                TextInput::make('minimum_purchase_price')
+                    ->numeric()
+                    ->inputMode('numeric'),
+                Select::make('categories')
+                    ->live()
+                    ->options([
+                        'Nominal Harga' => 'Nominal Harga',
+                        'Persentase Harga' => 'Persentase Harga',
+                        'Paket' => 'Paket',
+                        'Cashback' => 'Cashback',
+                        'Voucher Pembelian' => 'Voucher Pembelian',
+                    ])
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        $set('nominal_discount', null);
+                        $set('persentase_harga_discount', null);
+                        $set('buy_discount', null);
+                        $set('get_discount', null);
+                        $set('cashback_discount', null);
+                    }),
+                TextInput::make('nominal_discount')
+                    ->reactive()
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->inputMode('numeric')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Nominal Harga')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Nominal Harga' || $get('categories') == 'Voucher Pembelian'),
+                TextInput::make('persentase_harga_discount')
+                    ->reactive()
+                    ->numeric()
+                    ->suffix('%')
+                    ->inputMode('numeric')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Persentase Harga')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Persentase Harga' || $get('categories') == 'Voucher Pembelian'),
+                TextInput::make('buy_discount')
+                    ->reactive()
+                    ->numeric()
+                    ->inputMode('numeric')
+                    ->prefix('beli')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Paket')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Paket' || $get('categories') == 'Voucher Pembelian'),
+                TextInput::make('get_discount')
+                    ->reactive()
+                    ->numeric()
+                    ->inputMode('numeric')
+                    ->prefix('gratis')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Paket')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Paket' || $get('categories') == 'Voucher Pembelian'),
+                TextInput::make('cashback_discount')
+                    ->reactive()
+                    ->numeric()
+                    ->inputMode('numeric')
+                    ->prefix('Rp')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Cashback')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Cashback' || $get('categories') == 'Voucher Pembelian'),
+                DatePicker::make('start_date'),
+                DatePicker::make('end_date')
             ]);
     }
 
@@ -49,10 +107,10 @@ class DiscountResource extends Resource
             ->columns([
                 TextColumn::make('code')->label('Kode')->searchable(),
                 TextColumn::make('max_used')->label('Maksimal Pengguna')->searchable(),
-                TextColumn::make('discount_percentage')->label('Diskon(%)')->searchable(),
                 TextColumn::make('used')->label('Digunakan (×)')->searchable(),
                 TextColumn::make('minimum_point')->label('Poin Minimum')->searchable(),
-                TextColumn::make('expired_date')->label('Berakhir Pada'),
+                TextColumn::make('start_date')->label('Dimulai Pada'),
+                TextColumn::make('end_date')->label('Berakhir Pada'),
             ])
             ->filters([
                 //

@@ -16,6 +16,8 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
 
 class CustomerResource extends Resource
 {
@@ -33,6 +35,15 @@ class CustomerResource extends Resource
                 Textarea::make('address')
                     ->minLength(3)
                     ->maxLength(255),
+                Select::make('gender')
+                    ->options([
+                        'Pria' => 'Pria',
+                        'Wanita' => 'Wanita',
+                    ]),
+                DatePicker::make('birth_date'),
+                TextInput::make('point')
+                    ->numeric()
+                    ->inputMode('numeric'),
                 TextInput::make('email')->email(),
                 TextInput::make('phone_number')->tel()
             ]);

@@ -3,17 +3,20 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use function Filament\Support\format_money;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Str;
+use Filament\Forms\Components\Table as TableComponent;
+use App\Filament\Resources\TransactionResource\RelationManagers\TransactionDetailRelationManager;
 
 class TransactionResource extends Resource
 {
@@ -21,15 +24,19 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('price_total'),
+                TextInput::make('price_total')
+                    ->prefix('Rp'),
                 TextInput::make('customer_email'),
                 TextInput::make('cashier_email'),
-                TextInput::make('created_at'),
-                TextInput::make('updated_at'),
             ]);
     }
 
@@ -37,29 +44,32 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('price_total')->label('Total Harga')->searchable(),
+                TextColumn::make('price_total')->label('Total Harga')
+                    ->formatStateUsing(function ($state) {
+                        return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
+                    })->searchable(),
                 TextColumn::make('customer_email')->label('Email Kostumer')->searchable(),
                 TextColumn::make('cashier_email')->label('Email Kasir')->searchable(),
                 TextColumn::make('created_at')->label('Dibuat Pada'),
-                TextColumn::make('updated_at')->label('Diubah Pada')
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            TransactionDetailRelationManager::class,
         ];
     }
 
@@ -67,8 +77,9 @@ class TransactionResource extends Resource
     {
         return [
             'index' => Pages\ListTransactions::route('/'),
-            'create' => Pages\CreateTransaction::route('/create'),
+            // 'create' => Pages\CreateTransaction::route('/create'),
             'edit' => Pages\EditTransaction::route('/{record}/edit'),
+            'view' => Pages\ViewTransaction::route('/{record}'),
         ];
     }
 }

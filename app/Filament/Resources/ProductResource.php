@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use App\Models\Discount;
 
 class ProductResource extends Resource
 {
@@ -33,9 +35,6 @@ class ProductResource extends Resource
                 TextInput::make('name')
                     ->minLength(3)
                     ->maxLength(80),
-                FileUpload::make('image')
-                    ->image()
-                    ->imageEditor(),
                 TextInput::make('price')
                     ->numeric()
                     ->inputMode('numeric')
@@ -44,7 +43,15 @@ class ProductResource extends Resource
                     ->numeric()
                     ->inputMode('numeric')
                     ->minValue(0)
-                    ->maxValue(10000)
+                    ->maxValue(10000),
+                Select::make('discount_id')
+                    ->label('Diskon')
+                    ->options(Discount::all()->pluck('code', 'id'))
+                    ->searchable(),
+                FileUpload::make('image')
+                    ->required()
+                    ->image()
+                    ->imageEditor(),
             ]);
     }
 
