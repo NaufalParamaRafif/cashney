@@ -24,6 +24,9 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->spa()
+            ->spaUrlExceptions([
+                '*/admin/transaction-page',
+            ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->sidebarFullyCollapsibleOnDesktop()
             ->default()

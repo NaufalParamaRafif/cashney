@@ -1,77 +1,92 @@
 document.addEventListener("alpine:init", () => {
-    // Alpine.data("products", () => ({
-    //   items: window.products.map(product => {
-    //       console.log(product);
-    //       console.log('halo');
-    //       // return products;
-    //   }),
-    // }));
-  
   Alpine.store("cart", {
     items: [],
     subtotal: 0,
-    pajak: 0,
-    total: 0,
     quantity: 0,
-    add(newItem) {
-      const cartItem = this.items.find((item) => item.id === newItem.id);
-      if (!cartItem) {
-        this.items.push({ ...newItem, quantity: 1, total: newItem.price });
-        this.quantity++;
-        this.subtotal += Number(newItem.price);
-        console.log("new item price:" + newItem.price);
-        console.log("subtotal:" + this.subtotal);
-      } else {
-        this.items = this.items.map((item) => {
-          if (item.id !== newItem.id) {
-            return item;
-          } else {
-            item.quantity++;
-            item.total = Number(item.quantity * item.price);
-            this.quantity++;
-            this.subtotal += Number(item.price);
-            console.log("item price:" + newItem.price);
-            console.log("subtotal:" + this.subtotal);
-            return item;
-          }
-        });
-      }
-      this.pajak = Number(this.subtotal * 2.5/100);
-      console.log("pajak:" + this.pajak);
-      this.total = Number(this.subtotal + this.pajak);
-      console.log("total:" + this.total);
-    },
-    remove(id) {
-        const cartItem = this.items.find((item) => item.id === id);
 
-        if(cartItem.quantity > 1) {
-            this.items = this.items.map((item) => {
-                if (item.id !== id){
-                    return item
-                } else {
-                    item.quantity--;
-                    item.total = Number(item.quantity * item.price);
-                    console.log("harga total:" + item.total);
-                    this.quantity--;
-                    this.subtotal -= Number(item.price);
-                    console.log("subtotal:" + this.subtotal);
-                    return item;
-                }
-            })
-        } else if(cartItem.quantity === 1) {
-            this.items = this.items.filter((item) => item.id !== id);
-            this.quantity--;
-            this.subtotal -= Number(cartItem.price);
-            console.log("subtotal:" + this.subtotal);
-        }
-        this.pajak = Number(this.subtotal * 2.5/100);
-        console.log("pajak:" + this.pajak);
-        this.total = Number(this.subtotal + this.pajak);
-        console.log("total:" + this.total);
+    findItem(id) {
+      return this.items.find((item) => item.id === id);
+    },
+
+    isForEveryone(discount) {
+      if (!discount) return false;
+
+      return (
+        discount.max_used - discount.used !== 0 &&
+        discount.minimum_purchase_price == 0 &&
+        discount.minimum_point == 0
+      );
+    },
+
+    getPriceAfterDiscount(newItem) {
+      const discount = newItem.discount;
+
+      if (!discount || !this.isForEveryone(discount)) {
+        return newItem.price;
+      }
+
+      if (discount.categories == "Nominal Harga") {
+        return Number(newItem.price - discount.nominal_discount);
+      }
+
+      if (discount.categories == "Persentase Harga") {
+        return Number(newItem.price - (newItem.price * discount.persentase_harga_discount));
+      }
+
+      return newItem.price;
+    },
+
+    add(newItem) {
+      console.log("Add item:", newItem);
+
+      const cartItem = this.findItem(newItem.id);
+
+      if (!cartItem) {
+        const finalPrice = this.getPriceAfterDiscount(newItem);
+        this.items.push({ ...newItem, quantity: 1, final_price: finalPrice, total: finalPrice });
+        this.quantity++;
+        this.subtotal += Number(finalPrice);
+      } else {
+        cartItem.quantity++;
+        cartItem.total = Number(cartItem.quantity * cartItem.final_price);
+        this.quantity++;
+        this.subtotal += Number(cartItem.final_price);
+      }
+
+      console.log("Subtotal:", this.subtotal);
+    },
+
+    remove(id) {
+      const cartItem = this.findItem(id);
+
+      if (!cartItem) {
+        console.warn("Item not found in cart!");
+        return;
+      }
+
+      if (cartItem.quantity > 1) {
+        cartItem.quantity--;
+        cartItem.total = Number(cartItem.quantity * cartItem.final_price);
+        this.quantity--;
+        this.subtotal -= Number(cartItem.final_price);
+      } else {
+        this.items = this.items.filter((item) => item.id !== id);
+        this.quantity--;
+        this.subtotal -= Number(cartItem.final_price);
+      }
+
+      console.log("Subtotal:", this.subtotal);
+    },
+
+    clear() {
+      this.items = [];
+      this.quantity = 0;
+      this.subtotal = 0;
     }
   });
 });
 
+// helper format rupiah
 const rupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",

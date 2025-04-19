@@ -18,8 +18,8 @@ class Discount extends Model
         return $this->belongsToMany(Transaction::class);
     }
 
-    public function categories(): HasMany
+    public function products(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Product::class);
     }
 }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('transactions_detail', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('product_total');
+            $table->unsignedInteger('free_product_total')->default(0);
+            $table->unsignedInteger('cashback')->default(0);
             $table->decimal('price_per_item', $precision = 9, $scale = 2);
             $table->decimal('subtotal', $precision = 10, $scale = 2);
             $table->string('transaction_code');

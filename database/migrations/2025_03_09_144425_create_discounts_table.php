@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique();
+            $table->string('code', length: 9)->unique();
             $table->unsignedInteger('max_used');
             $table->unsignedInteger('used')->default(0);
             $table->unsignedInteger('minimum_point');
