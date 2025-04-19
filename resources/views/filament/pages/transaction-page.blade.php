@@ -74,7 +74,7 @@
                 </div>
             </div>
             <button 
-                wire:click="mountAction('checkoutAction', { items_id: $store.cart.items.map(item => item.id) })"
+                wire:click="mountAction('checkoutAction', { items: $store.cart.items.map(item => ({'item_id': item.id, 'item_quantity': item.quantity})) })"
                 class="bg-red-500 text-white rounded-full py-1 text-lg font-bold"
             >
                 Button

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('subtotal', $precision = 10, $scale = 2);
             $table->string('transaction_code');
             $table->string('product_name');
-            $table->string('discount_code');
+            $table->string('discount_code')->nullable();
             $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('product_id')->nullable();
             $table->unsignedBigInteger('discount_id')->nullable();

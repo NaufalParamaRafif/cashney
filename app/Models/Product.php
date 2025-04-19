@@ -22,11 +22,6 @@ class Product extends Model
         return $this->belongsTo(Discount::class);
     }
 
-    public function getDiscountAttribute()
-    {
-        return $this->discount;
-    }
-
     /**
      * The relationships that should always be loaded.
      *

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('price_total', $precision = 10, $scale = 2);
             $table->unsignedBigInteger('customer_id')->nullable(); 
             $table->unsignedBigInteger('cashier_id')->nullable(); 
-            $table->string('customer_email');
+            $table->string('customer_email')->nullable();
             $table->string('cashier_email');
             
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
