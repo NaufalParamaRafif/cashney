@@ -25,11 +25,11 @@ document.addEventListener("alpine:init", () => {
         return newItem.price;
       }
 
-      if (discount.categories == "Nominal Harga") {
+      if (discount.categories == "nominal") {
         return Number(newItem.price - discount.nominal_discount);
       }
 
-      if (discount.categories == "Persentase Harga") {
+      if (discount.categories == "persentase") {
         return Number(newItem.price - (newItem.price * discount.persentase_harga_discount));
       }
 

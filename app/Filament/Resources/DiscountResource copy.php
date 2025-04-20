@@ -48,15 +48,16 @@ class DiscountResource extends Resource
                 Select::make('categories')
                     ->live()
                     ->options([
-                        'nominal'       => 'Nominal Harga',
-                        'persentase'    => 'Persentase Harga',
-                        'paket'         => 'Paket',
-                        'cashback'      => 'Cashback',
+                        'Nominal Harga' => 'Nominal Harga',
+                        'Persentase Harga' => 'Persentase Harga',
+                        'Paket' => 'Paket',
+                        'Cashback' => 'Cashback',
+                        'Voucher Pembelian' => 'Voucher Pembelian',
                     ])
                     ->afterStateUpdated(function (Set $set, $state) {
                         $set('nominal_discount', null);
                         $set('persentase_harga_discount', null);
-                        $set('minimum_buy_discount', null);
+                        $set('buy_discount', null);
                         $set('get_discount', null);
                         $set('cashback_discount', null);
                     }),
@@ -65,36 +66,36 @@ class DiscountResource extends Resource
                     ->numeric()
                     ->prefix('Rp')
                     ->inputMode('numeric')
-                    ->required(fn (Get $get): bool => $get('categories') == 'nominal')
-                    ->visible(fn (Get $get): bool => $get('categories') == 'nominal'),
+                    ->required(fn (Get $get): bool => $get('categories') == 'Nominal Harga')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Nominal Harga' || $get('categories') == 'Voucher Pembelian'),
                 TextInput::make('persentase_harga_discount')
                     ->reactive()
                     ->numeric()
                     ->suffix('%')
                     ->inputMode('numeric')
-                    ->required(fn (Get $get): bool => $get('categories') == 'persentase')
-                    ->visible(fn (Get $get): bool => $get('categories') == 'persentase'),
-                TextInput::make('minimum_buy_discount')
+                    ->required(fn (Get $get): bool => $get('categories') == 'Persentase Harga')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Persentase Harga' || $get('categories') == 'Voucher Pembelian'),
+                TextInput::make('buy_discount')
                     ->reactive()
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('beli')
-                    ->required(fn (Get $get): bool => $get('categories') == 'paket')
-                    ->visible(fn (Get $get): bool => $get('categories') == 'paket'),
+                    ->required(fn (Get $get): bool => $get('categories') == 'Paket')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Paket' || $get('categories') == 'Voucher Pembelian'),
                 TextInput::make('get_discount')
                     ->reactive()
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('gratis')
-                    ->required(fn (Get $get): bool => $get('categories') == 'paket')
-                    ->visible(fn (Get $get): bool => $get('categories') == 'paket'),
+                    ->required(fn (Get $get): bool => $get('categories') == 'Paket')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Paket' || $get('categories') == 'Voucher Pembelian'),
                 TextInput::make('cashback_discount')
                     ->reactive()
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('Rp')
-                    ->required(fn (Get $get): bool => $get('categories') == 'cashback')
-                    ->visible(fn (Get $get): bool => $get('categories') == 'cashback'),
+                    ->required(fn (Get $get): bool => $get('categories') == 'Cashback')
+                    ->visible(fn (Get $get): bool => $get('categories') == 'Cashback' || $get('categories') == 'Voucher Pembelian'),
                 DatePicker::make('start_date'),
                 DatePicker::make('end_date')
             ]);

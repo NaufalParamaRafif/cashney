@@ -19,9 +19,9 @@ document.addEventListener("alpine:init", () => {
       const cartItem = this.items.find((item) => item.id === newItem.id);
       if (!cartItem) {
         let itemPriceAfterDiscount = (itemCategory) => {
-          if(itemCategory == "Nominal Harga" || itemCategory == "Voucher Pembelian"){
+          if(itemCategory == "nominal"){
             return Number(newItem.price - newItem.discount.nominal_discount);
-          } else if(itemCategory == "Persentase Harga" || itemCategory == "Voucher Pembelian") {
+          } else if(itemCategory == "persentase") {
             return Number(newItem.price - (newItem.price * persentase_harga_discount));
           }
           // else if(itemCategory == "Paket" || itemCategory == "Voucher Pembelian") {

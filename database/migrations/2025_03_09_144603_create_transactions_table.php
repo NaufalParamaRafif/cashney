@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->decimal('price_total', $precision = 10, $scale = 2);
+            $table->decimal('cashback', $precision = 10, $scale = 2)->nullable();
             $table->unsignedBigInteger('customer_id')->nullable(); 
             $table->unsignedBigInteger('cashier_id')->nullable(); 
             $table->string('customer_email')->nullable();

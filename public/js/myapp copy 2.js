@@ -33,7 +33,7 @@ document.addEventListener("alpine:init", () => {
                   return newItem.price;
               }
   
-              if (itemDiscount.categories == "Nominal Harga") {
+              if (itemDiscount.categories == "nominal") {
                   return newItem.price - itemDiscount.nominal_discount;
               }
   

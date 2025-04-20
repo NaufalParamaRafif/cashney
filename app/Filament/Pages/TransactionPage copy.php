@@ -8,7 +8,6 @@ use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
-use App\Helpers\TransactionHelper;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -23,7 +22,6 @@ use Filament\Forms\Set;
 use Filament\Forms\Components\Actions\Action as FormAction;
 use Filament\Forms\Get;
 use Illuminate\Support\Facades\DB;
-
 
 
 class TransactionPage extends Page implements HasForms, HasActions
@@ -46,9 +44,28 @@ class TransactionPage extends Page implements HasForms, HasActions
                     ->label('Kode Member')
                     ->options(Customer::all()->pluck('member_code', 'member_code'))
                     ->searchable(),
+                TextInput::make('voucher_code')
+                ->label('Kode Voucher')
+                ->length(9)
+                ->suffixAction(
+                    FormAction::make('applyVoucher')
+                        ->icon('heroicon-m-check')
+                        ->tooltip('Apply Voucher')
+                        ->color('success')
+                        ->action(function (Set $set, Get $get, $state) {
+                            if (!Discount::where('code', $state)->exists()) {
+                                $set('voucher_error', 'Voucher tidak ditemukan!');
+                                $set('voucher_code', null);
+                            } else {
+                                $set('voucher_error', 'Voucher tersedia');
+                            }
+                        })
+                )
+                ->hint(fn (Get $get) => $get('voucher_error'))
+                ->hintColor(fn (Get $get) => $get('voucher_error') === 'Voucher tersedia' ? 'success' : 'danger')
             ])
             ->action(function (array $data, array $arguments): void {
-                $customer = Customer::find($data['member_code'] ?? null);
+                $customer = Customer::find($data['customer_id'] ?? null);
                 $items = $arguments['items'] ?? [];
             
                 $productIds = collect($items)->pluck('item_id')->all();
@@ -71,25 +88,16 @@ class TransactionPage extends Page implements HasForms, HasActions
                         $productId = $item['item_id'];
                         $quantity = $item['item_quantity'];
                         $freeQty = 0;
-            
+                        
                         $product = $products[$productId];
                         $price = $product->price;
                         $discount = $product->discount ?? null;
 
-                        if (
-                            $customer && $discount &&
-                            TransactionHelper::isEligible($discount, $customer, $product)
-                        ) {
-                            $price = TransactionHelper::applyDiscount($discount, $price);
-                            $freeQty = TransactionHelper::calculateFreeQty($discount, $quantity);
+                        // tambah if kalo semisal customernya tidak diketahui sehingga bisa mendapatkan diskon yang ada diproduk yang tidak mmebutuhkan poin minimum
             
-                            if ($discount->minimum_point > 0 && $customer->point >= $discount->minimum_point) {
-                                $customer->decrement('point', ($discount->minimum_point * 0.025));
-                            }
-            
-                            if ($discount->max_used !== null) {
-                                $discount->increment('used');
-                            }
+                        if ($customer && $customer->is_member && $discount && $this->isEligible($discount, $customer, $product)) {
+                            $price = $this->applyDiscount($discount, $price);
+                            // ubah freeqty kalo semisal tipe diskonnya adalah paket dan dia eligible (memenuhi buy ..., maka get ...)
                         }
             
                         $transactionDetails[] = [
@@ -101,31 +109,30 @@ class TransactionPage extends Page implements HasForms, HasActions
                             'discount_code' => $discount->code ?? null,
                             'product_total' => $quantity,
                             'free_product_total' => $freeQty,
-                            'cashback' => $discount->cashback_discount ?? 0,
+                            'cashback' => $discount->cashback ?? 0,
                             'price_per_item' => $price,
-                            'subtotal' => $price * $quantity,
+                            'subtotal' => ($quantity * $price),
                         ];
-            
-                        $product->decrement('supply', $quantity);
+                        // kurangi stok barang
                     }
             
                     TransactionDetail::insert($transactionDetails);
             
+                    // Update total price
                     $transaction->update([
                         'price_total' => collect($transactionDetails)->sum('subtotal'),
-                        'cashback' => collect($transactionDetails)->sum('cashback'),
                     ]);
-            
-                    // Tambahkan point reward untuk member (misal: 1 poin per 10rb)
-                    if ($customer && $customer->is_member) {
-                        $customer->increment('point', floor($transaction->price_total / 10000));
-                    }
+
+                    // kurangi poin user jika user adalah member dan menggunakan diskon
+                    // tambahkan used discount yang ada
+                    // tambahkan poin user jika user member
             
                     DB::commit();
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     throw $th;
                 }
+
             });
     }
     
@@ -141,5 +148,35 @@ class TransactionPage extends Page implements HasForms, HasActions
             'categories' => $this->categories,
             'products' => $this->products,
         ];
+    }
+
+    protected function isEligible(Discount $discount, Customer $customer, Product $product)
+    {
+        if ($discount->max_used && $discount->used >= $discount->max_used) {
+            return false;
+        }
+
+        if ($discount->minimum_purchase_price && $product->price < $discount->minimum_purchase_price) {
+            return false;
+        }
+
+        if ($discount->minimum_point && $customer->point < $discount->minimum_point) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function applyDiscount(Discount $discount, float $price)
+    {
+        if ($discount->type === 'nominal') {
+            return max(0, $price - $discount->amount);
+        }
+
+        if ($discount->type === 'persentase') {
+            return max(0, $price * ((100 - $discount->percentage) / 100));
+        }
+
+        return $price;
     }
 }
