@@ -38,6 +38,11 @@ class TransactionPage extends Page implements HasForms, HasActions
     public $categories;
     public $products;
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()?->role === 'employee';
+    }
+
     public function checkoutAction(): Action
     {
         return Action::make('checkout')

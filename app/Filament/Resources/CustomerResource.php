@@ -30,27 +30,34 @@ class CustomerResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->required()
                     ->label('Nama')
                     ->minLength(3)
                     ->maxLength(80),
                 Textarea::make('address')
+                    ->required()
                     ->label('Alamat')
                     ->minLength(3)
                     ->maxLength(255),
                 Select::make('gender')
+                    ->required()
                     ->label('Jenis Kelamin')
                     ->options([
                         'Pria' => 'Pria',
                         'Wanita' => 'Wanita',
                     ]),
                 DatePicker::make('birth_date')
+                    ->required()
                     ->label('Tanggal Lahir'),
                 TextInput::make('point')
                     ->label('Point')
                     ->readOnly(),
                 TextInput::make('email')
+                    ->required()
                     ->label('Email'),
-                TextInput::make('phone_number')->tel()
+                TextInput::make('phone_number')
+                    ->required()
+                    ->tel()
                     ->label('Nomor Telephone')
             ]);
     }

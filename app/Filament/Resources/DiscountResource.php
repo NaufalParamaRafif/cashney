@@ -30,28 +30,33 @@ class DiscountResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->required()
                     ->label('Nama')
-                    ->readOnly()
                     ->minLength(5),
                 TextInput::make('code')
+                    ->required()
                     ->label('Kode')
                     ->minLength(4)
                     ->maxLength(25),
                 TextInput::make('max_used')
+                    ->required()
                     ->label('Maksimal Pengguna')
                     ->numeric()
                     ->inputMode('numeric')
                     ->minValue(1)
                     ->maxValue(1000000),
                 TextInput::make('minimum_point')
+                    ->required()
                     ->label('Poin Minimal')
                     ->numeric()
                     ->inputMode('numeric'),
                 TextInput::make('minimum_purchase_price')
+                    ->required()
                     ->label('Harga Minimal Pembelian')
                     ->numeric()
                     ->inputMode('numeric'),
                 Select::make('categories')
+                    ->required()
                     ->label('Kategori')
                     ->live()
                     ->options([

@@ -33,15 +33,18 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->required()
                     ->label('Nama')
                     ->minLength(3)
                     ->maxLength(80),
                 TextInput::make('price')
+                    ->required()
                     ->label('Harga')
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('Rp.'),
                 TextInput::make('supply')
+                    ->required()
                     ->label('Stok')
                     ->numeric()
                     ->inputMode('numeric')
