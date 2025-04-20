@@ -45,7 +45,15 @@
         </div>
 
         {{-- order div --}}
-        <div class="flex flex-col p-3.5 border rounded-md border-red-500 justify-evenly gap-2 lg:w-[480px]">
+        <div
+            x-data
+            x-on:transaction-finished.window="
+                $store.cart.items = [];
+                $store.cart.subtotal = 0;
+                $store.cart.total = 0;
+            "
+            class="flex flex-col p-3.5 border rounded-md border-red-500 justify-evenly gap-2 lg:w-[480px]"
+        >
             <h3 class="text-2xl font-bold">Order</h3>
             <div class="flex flex-col gap-2 max-h-[20rem] overflow-y-auto">
                 <template x-for="(item, index) in $store.cart.items" :key="index">
@@ -77,7 +85,7 @@
                 wire:click="mountAction('checkoutAction', { items: $store.cart.items.map(item => ({'item_id': item.id, 'item_quantity': item.quantity})) })"
                 class="bg-red-500 text-white rounded-full py-1 text-lg font-bold"
             >
-                Button
+                Checkout
             </button>
         </div>
     </div>

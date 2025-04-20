@@ -33,13 +33,16 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label('Nama')
                     ->minLength(3)
                     ->maxLength(80),
                 TextInput::make('price')
+                    ->label('Harga')
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('Rp.'),
                 TextInput::make('supply')
+                    ->label('Stok')
                     ->numeric()
                     ->inputMode('numeric')
                     ->minValue(0)
@@ -49,6 +52,7 @@ class ProductResource extends Resource
                     ->options(Discount::all()->pluck('code', 'id'))
                     ->searchable(),
                 FileUpload::make('image')
+                    ->label('Gambar')
                     ->required()
                     ->image()
                     ->imageEditor(),

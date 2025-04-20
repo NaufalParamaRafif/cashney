@@ -27,6 +27,7 @@ class CategoryResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label('Nama Kategori')
                     ->minLength(3)
                     ->maxLength(80),
             ]);

@@ -30,22 +30,29 @@ class DiscountResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label('Nama')
+                    ->readOnly()
                     ->minLength(5),
                 TextInput::make('code')
+                    ->label('Kode')
                     ->minLength(4)
                     ->maxLength(25),
                 TextInput::make('max_used')
+                    ->label('Maksimal Pengguna')
                     ->numeric()
                     ->inputMode('numeric')
                     ->minValue(1)
                     ->maxValue(1000000),
                 TextInput::make('minimum_point')
+                    ->label('Poin Minimal')
                     ->numeric()
                     ->inputMode('numeric'),
                 TextInput::make('minimum_purchase_price')
+                    ->label('Harga Minimal Pembelian')
                     ->numeric()
                     ->inputMode('numeric'),
                 Select::make('categories')
+                    ->label('Kategori')
                     ->live()
                     ->options([
                         'nominal'       => 'Nominal Harga',
@@ -95,8 +102,10 @@ class DiscountResource extends Resource
                     ->prefix('Rp')
                     ->required(fn (Get $get): bool => $get('categories') == 'cashback')
                     ->visible(fn (Get $get): bool => $get('categories') == 'cashback'),
-                DatePicker::make('start_date'),
+                DatePicker::make('start_date')
+                    ->label('Dimulai pada'),
                 DatePicker::make('end_date')
+                    ->label('Berakhir pada'),
             ]);
     }
 

@@ -121,7 +121,15 @@ class TransactionPage extends Page implements HasForms, HasActions
                         $customer->increment('point', floor($transaction->price_total / 10000));
                     }
             
+                    Notification::make()
+                        ->title('Transaksi berhasil')
+                        ->success()
+                        ->body('Transaksi telah diproses dengan sukses.')
+                        ->send();
+
                     DB::commit();
+                    
+                    $this->dispatch('transaction-finished');
                 } catch (\Throwable $th) {
                     DB::rollBack();
                     throw $th;

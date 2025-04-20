@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Str;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Table as TableComponent;
 use App\Filament\Resources\TransactionResource\RelationManagers\TransactionDetailRelationManager;
 
@@ -34,9 +35,22 @@ class TransactionResource extends Resource
         return $form
             ->schema([
                 TextInput::make('price_total')
-                    ->prefix('Rp'),
-                TextInput::make('customer_email'),
-                TextInput::make('cashier_email'),
+                    ->formatStateUsing(function ($state) {
+                        return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
+                    }),
+                TextInput::make('cashback')
+                    ->formatStateUsing(function ($state) {
+                        return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
+                    }),
+                TextInput::make('customer_email')
+                    ->label('Email Pelanggan'),
+                TextInput::make('cashier_email')
+                    ->label('Email Kasir'),
+                TextInput::make('code')
+                    ->label('Kode Transaksi'),
+                DatePicker::make('created_at')
+                    ->format('d/m/Y')
+                    ->label('Tanggal Transaksi'),
             ]);
     }
 
