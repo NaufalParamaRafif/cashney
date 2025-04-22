@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('address');
             $table->string('email');
             $table->string('phone_number');
-            $table->unsignedInteger('point')->default(0);
+            $table->unsignedInteger('point')->default(1000);
             $table->string('password');
             $table->timestamps();
         });

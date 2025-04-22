@@ -61,7 +61,7 @@
                         <div class="flex flex-col justify-between self-stretch items-end w-48">
                             <h6 class="text-xs font-bold text-red-500" x-text="rupiah(item.total)"></h6>
                             <h6 class="flex flex-row gap-2 items-center text-sm font-bold mb-1">
-                                <span class="p-1 px-2 rounded-full bg-red-500 text-white hover:cursor-pointer" x-on:click="$store.cart.add(item)">+</span> x<span x-text="item.quantity"></span> <span class="p-1 px-2.5 rounded-full bg-red-500 text-white hover:cursor-pointer" x-on:click="$store.cart.remove(item.id)">-</span>
+                                <span class="p-1 px-2 rounded-full bg-red-500 text-white hover:cursor-pointer" x-on:click="$store.cart.add(item)">+</span> <span x-text="item.quantity"></span> <span class="p-1 px-2.5 rounded-full bg-red-500 text-white hover:cursor-pointer" x-on:click="$store.cart.remove(item.id)">-</span>
                             </h6>
                         </div>
                     </div>
