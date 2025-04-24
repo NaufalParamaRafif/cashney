@@ -13,7 +13,11 @@ class ListTransactions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Tables\Actions\Action::make('export_excel')
+                ->label('Export Excel')
+                ->icon('heroicon-o-download')
+                ->url(route('transactions.export'))
+                ->color('primary'),
         ];
     }
 }

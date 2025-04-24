@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\TransactionExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +19,5 @@ use App\Http\Controllers\ReceiptController;
 //     return view('welcome');
 // });
 
+Route::get('/export-transactions', [TransactionExportController::class, 'export'])->name('transactions.export');
 Route::get('/receipt/print/{id}', [ReceiptController::class, 'print'])->name('receipt.print');
