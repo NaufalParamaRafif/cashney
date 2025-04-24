@@ -40,6 +40,10 @@ class TransactionResource extends Resource
                     }),
                 TextInput::make('cashback')
                     ->formatStateUsing(function ($state) {
+                        if (empty($state)) {
+                            return '';
+                        }
+                
                         return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
                     }),
                 TextInput::make('customer_email')

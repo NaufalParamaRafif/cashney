@@ -21,7 +21,7 @@
                 </div>
             </div>
             {{-- item menu div --}}
-            <div class="grid grid-cols-2 gap-3 mx-h-[580px] overflow-y-auto p-1">
+            <div class="grid grid-cols-4 gap-3 mx-h-[580px] overflow-y-auto p-1">
                 @foreach ($products as $product)
                     <div class="flex flex-col p-2 border rounded-md border-red-500 justify-evenly gap-2 transition duration-300 hover:-translate-y-1 select-none hover:cursor-pointer" x-show="'{{ strtolower($product->name) }}'.includes(keyword.toLowerCase())" x-on:click="$store.cart.add({{ $product }})">
                         <div class="flex flex-row">
@@ -32,8 +32,8 @@
                                 <p class="text-xs">Kategori: <span class="font-semibold"><span>{{ $product->categories[0]->name ?? 'Tidak diketahui' }}</span></span></p>
                             </div>
                         </div>
-                        <h3 class="text-xs font-bold">{{ $product->name }}</h4>
-                        <p class="text-xs">Harga: <span class="font-semibold" x-text="rupiah({{ $product->price }})"></span></p>
+                        <h3 class="text-sm font-bold">{{ $product->name }}</h4>
+                        <p class="text-xs"><span class="font-semibold" x-text="rupiah({{ $product->price }})"></span></p>
                     </div>
                 @endforeach
             </div>

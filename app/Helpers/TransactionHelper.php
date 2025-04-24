@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Customer;
 use App\Models\Discount;
 use App\Models\Product;
+use Illuminate\Support\Carbon;
 
 class TransactionHelper
 {
@@ -13,7 +14,11 @@ class TransactionHelper
         return
             ($discount->max_used === null || $discount->used < $discount->max_used) &&
             $discount->minimum_purchase_price <= $product->price &&
-            $discount->minimum_point <= ($customer->point ?? 0);
+            $discount->minimum_point <= ($customer->point ?? 0) &&
+            (
+                $discount->end_date === null ||
+                Carbon::now()->lessThanOrEqualTo($discount->end_date)
+            );;
     }
 
     public static function applyDiscount(Discount $discount, float $price): float

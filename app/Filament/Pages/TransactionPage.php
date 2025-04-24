@@ -129,7 +129,13 @@ class TransactionPage extends Page implements HasForms, HasActions
                     Notification::make()
                         ->title('Transaksi berhasil')
                         ->success()
-                        ->body('Transaksi telah diproses dengan sukses.')
+                        ->body('Klik tombol di bawah untuk mencetak kwitansi.')
+                        ->actions([
+                            \Filament\Notifications\Actions\Action::make('print')
+                                ->label('Cetak Kwitansi')
+                                ->url(route('receipt.print', $transaction->id))
+                                ->openUrlInNewTab(),
+                        ])
                         ->send();
 
                     DB::commit();
