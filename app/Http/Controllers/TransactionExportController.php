@@ -22,8 +22,7 @@ class TransactionExportController extends Controller
         $sheet->setCellValue('A1', 'Kode Transaksi');
         $sheet->setCellValue('B1', 'Tanggal');
         $sheet->setCellValue('C1', 'Pelanggan');
-        $sheet->setCellValue('D1', 'Total');
-        $sheet->setCellValue('E1', 'Produk');
+        $sheet->setCellValue('D1', 'Produk');
 
         // Loop melalui transaksi dan masukkan ke spreadsheet
         $row = 2;
@@ -31,9 +30,8 @@ class TransactionExportController extends Controller
             $sheet->setCellValue('A' . $row, $transaction->code);
             $sheet->setCellValue('B' . $row, $transaction->created_at->format('Y-m-d H:i'));
             $sheet->setCellValue('C' . $row, $transaction->customer_email ?? '-');
-            $sheet->setCellValue('D' . $row, $transaction->total);
-            $sheet->setCellValue('E' . $row, $transaction->transactions_detail->map(function ($detail) {
-                return $detail->product->name . ' ×' . $detail->quantity;
+            $sheet->setCellValue('D' . $row, $transaction->transactions_detail->map(function ($detail) {
+                return $detail->product->name . ' ×' . $detail->product_total;
             })->implode(', '));
             $row++;
         }
