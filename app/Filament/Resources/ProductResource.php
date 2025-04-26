@@ -75,6 +75,10 @@ class ProductResource extends Resource
                 ImageColumn::make('image')->label('Gambar'),
                 TextColumn::make('price')->label('Harga')
                     ->formatStateUsing(function ($state) {
+                        if (empty($state)) {
+                            return '';
+                        }
+                
                         return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
                     })
                     ->searchable(),

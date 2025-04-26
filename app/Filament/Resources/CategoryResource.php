@@ -34,7 +34,8 @@ class CategoryResource extends Resource
                 TextInput::make('name')
                     ->label('Nama Kategori')
                     ->minLength(3)
-                    ->maxLength(80),
+                    ->maxLength(80)
+                    ->required(),
             ]);
     }
 

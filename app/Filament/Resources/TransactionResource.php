@@ -36,6 +36,10 @@ class TransactionResource extends Resource
             ->schema([
                 TextInput::make('price_total')
                     ->formatStateUsing(function ($state) {
+                        if (empty($state)) {
+                            return '';
+                        }
+                
                         return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
                     }),
                 TextInput::make('cashback')
@@ -64,6 +68,10 @@ class TransactionResource extends Resource
             ->columns([
                 TextColumn::make('price_total')->label('Total Harga')
                     ->formatStateUsing(function ($state) {
+                        if (empty($state)) {
+                            return '';
+                        }
+                
                         return Str::replace('IDR', 'Rp', format_money($state, 'IDR'));
                     })->searchable(),
                 TextColumn::make('customer_email')->label('Email Kostumer')->searchable(),

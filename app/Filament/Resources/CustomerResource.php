@@ -49,9 +49,9 @@ class CustomerResource extends Resource
                 DatePicker::make('birth_date')
                     ->required()
                     ->label('Tanggal Lahir'),
-                TextInput::make('point')
-                    ->label('Point')
-                    ->readOnly(),
+                // TextInput::make('point')
+                //     ->label('Point')
+                //     ->readOnly(),
                 TextInput::make('email')
                     ->required()
                     ->label('Email'),

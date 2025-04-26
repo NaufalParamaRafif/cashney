@@ -8,7 +8,7 @@ use Filament\Widgets\BarChartWidget;
 
 class UserGrowthChart extends BarChartWidget
 {
-    protected static ?string $heading = 'Pertumbuhan User (7 Minggu Terakhir)';
+    protected static ?string $heading = 'Pertumbuhan User (7 Hari Terakhir)';
 
     protected function getData(): array
     {

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('code', length: 9)->unique();
             $table->unsignedInteger('max_used');
             $table->unsignedInteger('used')->default(0);
-            $table->unsignedInteger('minimum_point');
-            $table->decimal('minimum_purchase_price', $precision = 10, $scale = 2);
+            $table->unsignedInteger('minimum_point')->default(0);
+            $table->decimal('minimum_purchase_price', $precision = 10, $scale = 2)->default(0);
             $table->enum('categories', ['nominal', 'persentase', 'paket', 'cashback']);
             $table->decimal('nominal_discount', $precision = 9, $scale = 2)->nullable();
             $table->decimal('cashback_discount', $precision = 9, $scale = 2)->nullable();

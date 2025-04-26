@@ -22,7 +22,6 @@ class CustomerSeeder extends Seeder
             'address' => '123 Main Street',
             'email' => 'johndoe@gmail.com',
             'phone_number' => '081234567890',
-            'password' => Hash::make('johndoe'),
         ]);
     }
 }

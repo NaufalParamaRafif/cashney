@@ -113,8 +113,10 @@ class DiscountResource extends Resource
                     ->required(fn (Get $get): bool => $get('categories') == 'cashback')
                     ->visible(fn (Get $get): bool => $get('categories') == 'cashback'),
                 DatePicker::make('start_date')
+                    ->required()
                     ->label('Dimulai pada'),
                 DatePicker::make('end_date')
+                    ->required()
                     ->label('Berakhir pada'),
             ]);
     }
