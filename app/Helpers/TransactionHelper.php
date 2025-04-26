@@ -34,13 +34,14 @@ class TransactionHelper
         return $price;
     }
 
-    public static function calculateFreeQty(Discount $discount, int $quantity): int
+    public static function calculateFreeQty(Discount $discount, Product $product,  int $quantity): int
     {
         if ($discount->categories === 'paket' &&
             $discount->minimum_buy_discount > 0 &&
             $quantity >= $discount->minimum_buy_discount &&
             $discount->get_discount > 0) {
-                
+
+            $product->decrement('supply', $discount->get_discount);
             return $discount->get_discount;
         }
 

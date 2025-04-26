@@ -21,7 +21,7 @@
                 </div>
             </div>
             {{-- item menu div --}}
-            <div class="grid grid-cols-4 gap-3 mx-h-[580px] overflow-y-auto p-1">
+            <div class="grid grid-cols-3 gap-3 mx-h-[580px] overflow-y-auto p-1">
                 @foreach ($products as $product)
                     <div class="flex flex-col p-2 border rounded-md border-red-500 justify-evenly gap-2 transition duration-300 hover:-translate-y-1 select-none hover:cursor-pointer" x-show="'{{ strtolower($product->name) }}'.includes(keyword.toLowerCase())" x-on:click="$store.cart.add({{ $product }})">
                         <div class="flex flex-row">

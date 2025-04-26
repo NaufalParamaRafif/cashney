@@ -47,13 +47,20 @@ class TransactionPage extends Page implements HasForms, HasActions
     {
         return Action::make('checkout')
             ->form([
-                Select::make('member_code')
-                    ->label('Kode Member')
-                    ->options(Customer::all()->pluck('member_code', 'member_code'))
+                Select::make('name')
+                    ->label('Nama')
+                    ->options(
+                        Customer::query()
+                            ->select(['id', 'name', 'email'])
+                            ->get()
+                            ->mapWithKeys(fn ($customer) => [
+                                $customer->id => "{$customer->name} ({$customer->email})" // Simpan ID sebagai key
+                            ])
+                    )
                     ->searchable(),
             ])
             ->action(function (array $data, array $arguments): void {
-                $customer = Customer::find($data['member_code'] ?? null);
+                $customer = Customer::find($data['name'] ?? null);
                 $items = $arguments['items'] ?? [];
             
                 $productIds = collect($items)->pluck('item_id')->all();
@@ -86,7 +93,7 @@ class TransactionPage extends Page implements HasForms, HasActions
                             TransactionHelper::isEligible($discount, $customer, $product)
                         ) {
                             $price = TransactionHelper::applyDiscount($discount, $price);
-                            $freeQty = TransactionHelper::calculateFreeQty($discount, $quantity);
+                            $freeQty = TransactionHelper::calculateFreeQty($discount, $product, $quantity);
             
                             if ($discount->minimum_point > 0 && $customer->point >= $discount->minimum_point) {
                                 $customer->decrement('point', ($discount->minimum_point * 0.025));

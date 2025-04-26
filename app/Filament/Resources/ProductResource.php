@@ -48,6 +48,21 @@ class ProductResource extends Resource
                     ->numeric()
                     ->inputMode('numeric')
                     ->prefix('Rp.'),
+                FileUpload::make('image')
+                    ->label('Gambar')
+                    ->required()
+                    ->image()
+                    ->imageEditor(),
+                Select::make('discount_id')
+                    ->label('Diskon')
+                    ->options(function () {
+                        return Discount::all()->mapWithKeys(function ($discount) {
+                            $label = view('components.discount-option', ['discount' => $discount])->render();
+                            return [$discount->id => $label];
+                        });
+                    })
+                    ->searchable()
+                    ->allowHtml(),
                 TextInput::make('supply')
                     ->required()
                     ->label('Stok')
@@ -55,15 +70,6 @@ class ProductResource extends Resource
                     ->inputMode('numeric')
                     ->minValue(0)
                     ->maxValue(10000),
-                Select::make('discount_id')
-                    ->label('Diskon')
-                    ->options(Discount::all()->pluck('code', 'id'))
-                    ->searchable(),
-                FileUpload::make('image')
-                    ->label('Gambar')
-                    ->required()
-                    ->image()
-                    ->imageEditor(),
             ]);
     }
 
