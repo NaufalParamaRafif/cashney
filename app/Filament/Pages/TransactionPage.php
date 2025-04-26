@@ -75,8 +75,8 @@ class TransactionPage extends Page implements HasForms, HasActions
                     foreach ($items as $item) {
                         $productId = $item['item_id'];
                         $quantity = $item['item_quantity'];
+                        
                         $freeQty = 0;
-            
                         $product = $products[$productId];
                         $price = $product->price;
                         $discount = $product->discount ?? null;
@@ -122,7 +122,7 @@ class TransactionPage extends Page implements HasForms, HasActions
                     ]);
             
                     // Tambahkan point reward untuk member (misal: 1 poin per 10rb)
-                    if ($customer && $customer->is_member) {
+                    if ($customer) {
                         $customer->increment('point', floor($transaction->price_total / 10000));
                     }
             
