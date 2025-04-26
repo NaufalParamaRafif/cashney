@@ -24,11 +24,17 @@ class StatsOverview extends BaseWidget
                 ->description('Hari ini')
                 ->descriptionIcon('heroicon-o-user-plus')
                 ->color('info'),
+
             // dd(TransactionDetail::whereDate('created_at', now()));
-            // Card::make('Total Produk Terjual Hari Ini', TransactionDetail::whereDate('created_at', now())->sum('product_total') . ' Item')
-            //     ->description('Semua produk yang terjual hari ini')
-            //     ->descriptionIcon('heroicon-o-shopping-cart')
-            //     ->color('warning'),
+            Card::make(
+                    'Total Produk Terjual Hari Ini', 
+                    TransactionDetail::whereHas('transaction', function($query) {
+                        $query->whereDate('created_at', now());
+                    })->sum('product_total') . ' Item'
+                )
+                ->description('Semua produk yang terjual hari ini')
+                ->descriptionIcon('heroicon-o-shopping-cart')
+                ->color('warning'),
         ];
     }
 }
